@@ -28,9 +28,9 @@ import os
 import sys
 import statistics
 
-from volttron.platform.vip.agent import Agent, RPC, Core
-from volttron.platform.agent import utils
-from volttron.platform.agent.utils import get_aware_utc_now
+from volttron.client.vip.agent import Agent, RPC, Core
+from volttron import utils
+from volttron.utils.time import get_aware_utc_now
 
 utils.setup_logging()
 _log = logging.getLogger(__name__)
@@ -143,7 +143,7 @@ def main(argv=sys.argv):
     """
     Main method called by the platform.
     """
-    utils.vip_main(log_statistics, identity='platform.logstatisticsagent')
+    utils.vip_main(log_statistics, identity='platform.log_statistics')
 
 
 if __name__ == '__main__':
