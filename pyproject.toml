@@ -3,7 +3,7 @@ requires = ["poetry-core>=1.2.2"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-volttron-log-statistics = "log-statistics.agent:main"
+volttron-log-statistics = "log_statistics.agent:main"
 
 [tool.isort]
 profile = "black"
