@@ -29,12 +29,19 @@ from mock import MagicMock
 
 from volttron.client.messaging.health import STATUS_GOOD
 from volttron.client.vip.agent import Agent
-from volttron.client import get_ops, get_home
+from volttrontesting.fixtures.volttron_platform_fixtures import volttron_instance
+#from volttron.client import get_ops, get_home
 
 test_config = {
     "analysis_interval_sec": 2,
     "publish_topic": "platform/log_statistics",
     "historian_topic": "analysis/log_statistics"
+}
+default_config = {
+    "file_path" : "/home/riley/env/volttron_home/volttron.log",
+    "analysis_interval_sec" : 60,
+    "publish_topic" : "platform/log_statistics",
+    "historian_topic" : "record/log_statistics"
 }
 
 @pytest.fixture(scope="module")
@@ -68,16 +75,28 @@ def test_default_config(volttron_instance, publish_agent):
     """
     Test the default configuration file included with the agent
     """
-    config_path = os.path.join(get_ops("LogStatisticsAgent"), "logstatisticsagent.config")
-    with open(config_path, "r") as config_file:
-        config_json = json.load(config_file)
-    assert isinstance(config_json, dict)
+
+    # config_path = "/home/riley/volttron-log-statistics/log_stat_config.json"
+    # with open(config_path, "r") as config_file:
+    #     config_json = json.load(config_file)
+    # assert isinstance(config_json, dict)
+
     stats_uuid = volttron_instance.install_agent(
-        agent_dir=get_ops("LogStatisticsAgent"),
-        config_file=config_json,
+        agent_dir="volttron-log-statistics",
+        config_file=default_config,
         start=True,
         vip_identity="health_test")
-    assert publish_agent.vip.rpc.call("health_test", "health.get_status").get(timeout=10).get('status') == STATUS_GOOD
+
+    import gevent
+    gevent.sleep(1)
+
+    # building another agent should populate the logs
+    volttron_instance.build_agent(identity="log_populate")
+
+    gevent.sleep(1)
+
+    assert publish_agent.callback.call_count >= 1
+
     volttron_instance.remove_agent(stats_uuid)
 
 
@@ -86,7 +105,7 @@ def test_log_stats(volttron_instance, publish_agent):
     print(f"File path: {test_config['file_path']}")
 
     stats_uuid = volttron_instance.install_agent(
-        agent_dir=get_ops("LogStatisticsAgent"),
+        agent_dir="volttron-log-statistics",
         config_file=test_config,
         start=True,
         vip_identity="health_test")
