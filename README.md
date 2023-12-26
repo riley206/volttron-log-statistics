@@ -22,7 +22,7 @@ The following is an example configuration file:
 ```json
 {
     "file_path" : "~/volttron/volttron.log",
-    "analysis_interval_min" : 60,
+    "analysis_interval_sec" : 60,
     "publish_topic" : "platform/log_statistics",
     "historian_topic" : "record/log_statistics"
 }
@@ -37,9 +37,9 @@ The following is an example of a periodic size delta publish:
 
 ```
 Peer: pubsub
-Sender: platform.logstatisticsagent1
+Sender: platform.log_statistics
 Bus:
-Topic: platform/log_statistics
-Headers: {'min_compatible_version': '3.0', 'max_compatible_version': ''}
-Message: {'log_size_delta': 902, 'timestamp': '2021-01-25T22:48:16.924135Z'}
+Topic: heartbeat/platform.log_statistics
+Headers: {'TimeStamp': '2023-12-26T21:05:06.675246+00:00', 'min_compatible_version': '3.0', 'max_compatible_version': ''}
+Message: {'log_size_delta': 6059, 'timestamp': '2023-12-26T21:05:10.627008Z'}
 ```
