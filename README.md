@@ -5,8 +5,72 @@ delta from the previous hour and publishes the difference in bytes with a timest
 deviation of the size delta every 24 hours.  This agent can be useful for detecting unexpected changes to the system 
 which may be an indication of some sort of failure or breach.
 
+# Prerequisites
 
+* Python 3.8
+
+## Python
+
+<details>
+<summary>To install Python 3.8, we recommend using <a href="https://github.com/pyenv/pyenv"><code>pyenv</code></a>.</summary>
+
+```bash
+# install pyenv
+git clone https://github.com/pyenv/pyenv ~/.pyenv
+
+# setup pyenv (you should also put these three lines in .bashrc or similar)
+export PATH="${HOME}/.pyenv/bin:${PATH}"
+export PYENV_ROOT="${HOME}/.pyenv"
+eval "$(pyenv init -)"
+
+# install Python 3.8
+pyenv install 3.8.10
+
+# make it available globally
+pyenv global system 3.8.10
+```
+</details>
+
+# Installation
+
+1. Create and activate a virtual environment.
+
+```shell
+python -m venv env
+source env/bin/activate
+```
+
+2. Install volttron and start the platform.
+
+```shell
+pip install volttron
+
+# Start platform with output going to volttron.log
+volttron -vv -l volttron.log &
+```
+3. Create a config directory and navigate to it:
+
+```shell
+mkdir config
+cd config
+```
 ### Configuration
+
+4. Navigate to the config directory and create a file called `log_stat_config.json` and add the following JSON to it:
+
+```json
+{
+    "file_path" : "~/volttron/volttron.log",
+    "analysis_interval_sec" : 60,
+    "publish_topic" : "platform/log_statistics",
+    "historian_topic" : "record/log_statistics"
+}
+```
+
+5. Install and start the log statistics agent
+```bash
+vctl install volttron-log-statistics --agent-config log_stat_config.json --json --vip-identity platform.log_statistics --start --force
+```
 
 The Log Statistics agent has 4 required configuration values:
 
@@ -17,16 +81,7 @@ The Log Statistics agent has 4 required configuration values:
 - `historian_topic`:  Can be used to specify a topic to publish log statistics to which gets captured by the 
   historian framework ("datalogger", "record", "analysis", "devices")
 
-The following is an example configuration file:
 
-```json
-{
-    "file_path" : "~/volttron/volttron.log",
-    "analysis_interval_sec" : 60,
-    "publish_topic" : "platform/log_statistics",
-    "historian_topic" : "record/log_statistics"
-}
-```
 
 
 ### Periodic Publish
