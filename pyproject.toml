@@ -9,7 +9,7 @@ volttron-log-statistics = "log_statistics.agent:main"
 profile = "black"
 
 [tool.poetry]
-include = ["src/log_statistics", "config"]
+include = ["src/log_statistics", "log_stat_config.json"]
 
 name = "volttron-log-statistics"
 version = "0.1.0"
