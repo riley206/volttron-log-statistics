@@ -86,6 +86,7 @@ The Log Statistics agent has 4 required configuration values:
 
 ### Periodic Publish
 
+
 The Log Statistics agent will run statistics publishes automatically based on the configured intervals.
 
 The following is an example of a periodic size delta publish:
