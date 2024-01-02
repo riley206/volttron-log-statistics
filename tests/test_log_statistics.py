@@ -64,24 +64,6 @@ def publish_agent(request, volttron_instance):
     request.addfinalizer(stop_agent)
     return agent
 
-# TODO get path to defualt config with python package.
-# def test_default_config(volttron_instance, publish_agent):
-#     """
-#     Test the default configuration file included with the agent
-#     """
-#     # config_path = os.path.join(get_ops("LogStatisticsAgent"), "logstatisticsagent.config")
-#     # with open(config_path, "r") as config_file:
-#     #     config_json = json.load(config_file)
-#     assert isinstance(test_config, dict)
-#     stats_uuid = volttron_instance.install_agent(
-#         agent_dir="volttron-log-statistics",
-#         config_file=test_config,
-#         start=True,
-#         vip_identity="health_test")
-#     assert publish_agent.vip.rpc.call("health_test", "health.get_status").get(timeout=10).get('status') == STATUS_GOOD
-#     volttron_instance.remove_agent(stats_uuid)
-
-
 def test_log_stats(volttron_instance, publish_agent):
     test_config["file_path"] = volttron_instance.log_path
     print(f"File path: {test_config['file_path']}")
