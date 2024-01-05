@@ -56,7 +56,16 @@ cd config
 ```
 ### Configuration
 
-4. Navigate to the config directory and create a file called `log_stat_config.json` and add the following JSON to it:
+4. Navigate to the config directory and create a file called `log_stat_config.json` and adjust the 4 required configuration values to fit your needs. An example is shown below.
+
+The Log Statistics agent has 4 required configuration values:
+
+- `file_path`:  This should be the path to the "volttron.log" file
+- `analysis_interval_secs`:  The interval in seconds between publishing the size delta statistic to the message bus
+- `publish_topic`:  Can be used to specify a topic to publish log statistics to which does not get captured by the 
+  historian framework (topics not prefixed by any of: "datalogger", "record", "analysis", "devices")
+- `historian_topic`:  Can be used to specify a topic to publish log statistics to which gets captured by the 
+  historian framework ("datalogger", "record", "analysis", "devices")
 
 ```json
 {
@@ -72,18 +81,6 @@ cd config
 vctl install volttron-log-statistics --agent-config log_stat_config.json --json --vip-identity platform.log_statistics --start --force
 ```
 
-The Log Statistics agent has 4 required configuration values:
-
-- `file_path`:  This should be the path to the "volttron.log" file
-- `analysis_interval_secs`:  The interval in seconds between publishing the size delta statistic to the message bus
-- `publish_topic`:  Can be used to specify a topic to publish log statistics to which does not get captured by the 
-  historian framework (topics not prefixed by any of: "datalogger", "record", "analysis", "devices")
-- `historian_topic`:  Can be used to specify a topic to publish log statistics to which gets captured by the 
-  historian framework ("datalogger", "record", "analysis", "devices")
-
-
-
-
 ### Periodic Publish
 
 
@@ -92,12 +89,7 @@ The Log Statistics agent will run statistics publishes automatically based on th
 The following is an example of a periodic size delta publish:
 
 ```
-Peer: pubsub
-Sender: platform.log_statistics
-Bus:
-Topic: heartbeat/platform.log_statistics
-Headers: {'TimeStamp': '2023-12-26T21:05:06.675246+00:00', 'min_compatible_version': '3.0', 'max_compatible_version': ''}
-Message: {'log_size_delta': 6059, 'timestamp': '2023-12-26T21:05:10.627008Z'}
+2024-01-05 12:30:21,952 (volttron-log-statistics-0.1.0 6584) log_statistics.agent(126) DEBUG: publishing message {'timestamp': '2024-01-05T20:30:21.952503Z', 'log_size_delta': 338} on topic platform/log_statistics
 ```
 
 # Disclaimer Notice
