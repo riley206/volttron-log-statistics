@@ -37,7 +37,7 @@ _log = logging.getLogger(__name__)
 __version__ = '1.0'
 
 
-def log_statistics(config_path, **kwargs):
+def log_statistics(config_path: str, **kwargs):
     """
     Load the LogStatisticsAgent agent configuration and returns and instance
     of the agent created using that configuration.
@@ -66,7 +66,7 @@ class LogStatisticsAgent(Agent):
         }
     """
 
-    def __init__(self, config, **kwargs):
+    def __init__(self, config: dict, **kwargs):
         super(LogStatisticsAgent, self).__init__(**kwargs)
         self.analysis_interval_sec = config["analysis_interval_sec"]
         self.file_path = config["file_path"]
