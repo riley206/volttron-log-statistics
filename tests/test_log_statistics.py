@@ -22,11 +22,11 @@
 # ===----------------------------------------------------------------------===
 # }}}
 
-import os
 import json
+import os
+
 import pytest
 from mock import MagicMock
-
 from volttron.client.messaging.health import STATUS_GOOD
 from volttron.client.vip.agent import Agent
 from volttrontesting.fixtures.volttron_platform_fixtures import volttron_instance

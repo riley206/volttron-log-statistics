@@ -62,9 +62,9 @@ The Log Statistics agent has 4 required configuration values:
 
 - `file_path`:  This should be the path to the "volttron.log" file
 - `analysis_interval_secs`:  The interval in seconds between publishing the size delta statistic to the message bus
-- `publish_topic`:  Can be used to specify a topic to publish log statistics to which does not get captured by the 
+- `publish_topic`:  Can be used to specify a topic to publish log statistics to which does not get captured by the
   historian framework (topics not prefixed by any of: "datalogger", "record", "analysis", "devices")
-- `historian_topic`:  Can be used to specify a topic to publish log statistics to which gets captured by the 
+- `historian_topic`:  Can be used to specify a topic to publish log statistics to which gets captured by the
   historian framework ("datalogger", "record", "analysis", "devices")
 
 ```json

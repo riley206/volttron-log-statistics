@@ -25,11 +25,11 @@
 import datetime
 import logging
 import os
-import sys
 import statistics
+import sys
 
-from volttron.client.vip.agent import Agent, RPC, Core
 from volttron import utils
+from volttron.client.vip.agent import RPC, Agent, Core
 from volttron.utils.time import get_aware_utc_now
 
 utils.setup_logging()
