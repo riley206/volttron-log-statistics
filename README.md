@@ -1,17 +1,15 @@
 # volttron-log-statistics
 
-The Log Statistics agent periodically reads the "volttron.log" file based on the configured interval, computes the size 
-delta from the previous hour and publishes the difference in bytes with a timestamp.  It also publishes standard 
-deviation of the size delta every 24 hours.  This agent can be useful for detecting unexpected changes to the system 
-which may be an indication of some sort of failure or breach.
+The Log Statistics agent periodically reads the "volttron.log" file based on the configured interval, computes the size delta from the previous hour and publishes the difference in bytes with a timestamp.  It also publishes standard deviation of the size delta every 24 hours.  This agent can be useful for detecting unexpected changes to the system which may be an indication of some sort of failure or breach.
 
-# Prerequisites
+## Prerequisites
 
 * Python 3.8
 
 ## Python
 
 <details>
+
 <summary>To install Python 3.8, we recommend using <a href="https://github.com/pyenv/pyenv"><code>pyenv</code></a>.</summary>
 
 ```bash
@@ -29,9 +27,10 @@ pyenv install 3.8.10
 # make it available globally
 pyenv global system 3.8.10
 ```
+
 </details>
 
-# Installation
+## Installation
 
 1. Create and activate a virtual environment.
 
@@ -48,12 +47,14 @@ pip install volttron
 # Start platform with output going to volttron.log
 volttron -vv -l volttron.log &
 ```
+
 3. Create a config directory and navigate to it:
 
 ```shell
 mkdir config
 cd config
 ```
+
 ### Configuration
 
 4. Navigate to the config directory and create a file called `log_stat_config.json` and adjust the 4 required configuration values to fit your needs. An example is shown below.
@@ -77,22 +78,22 @@ The Log Statistics agent has 4 required configuration values:
 ```
 
 5. Install and start the log statistics agent
+
 ```bash
 vctl install volttron-log-statistics --agent-config log_stat_config.json --json --vip-identity platform.log_statistics --start --force
 ```
 
 ### Periodic Publish
 
-
 The Log Statistics agent will run statistics publishes automatically based on the configured intervals.
 
 The following is an example of a periodic size delta publish:
 
-```
+```log
 2024-01-05 12:30:21,952 (volttron-log-statistics-0.1.0 6584) log_statistics.agent(126) DEBUG: publishing message {'timestamp': '2024-01-05T20:30:21.952503Z', 'log_size_delta': 338} on topic platform/log_statistics
 ```
 
-# Disclaimer Notice
+## Disclaimer Notice
 
 This material was prepared as an account of work sponsored by an agency of the
 United States Government.  Neither the United States Government nor the United
