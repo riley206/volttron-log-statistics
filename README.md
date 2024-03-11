@@ -1,5 +1,8 @@
 # volttron-log-statistics
 
+![Passing?](https://github.com/eclipse-volttron/volttron-log-statistics/actions/workflows/run-tests.yml/badge.svg) 
+[![pypi version](https://img.shields.io/pypi/v/volttron-log-statistics.svg)](https://pypi.org/project/volttron-log-statistics/) 
+
 The Log Statistics agent periodically reads the "volttron.log" file based on the configured interval, computes the size delta from the previous hour and publishes the difference in bytes with a timestamp.  It also publishes standard deviation of the size delta every 24 hours.  This agent can be useful for detecting unexpected changes to the system which may be an indication of some sort of failure or breach.
 
 ## Requires
@@ -24,10 +27,10 @@ After entering the config directory, create a file called `log_stat_config.json`
 
 ### Configuration
 
-The Log Statistics agent has 4 required configuration values:
+The Log Statistics agent has 4 configuration parameters, all of which are required:
 
 - `file_path`:  This should be the path to the "volttron.log" file
-- `analysis_interval_secs`:  The interval in seconds between publishing the size delta statistic to the message bus
+- `analysis_interval_secs`:  The interval in seconds between publishes of the size delta statistic to the message bus
 - `publish_topic`:  Can be used to specify a topic to publish log statistics to which does not get captured by the
   historian framework (topics not prefixed by any of: "datalogger", "record", "analysis", "devices")
 - `historian_topic`:  Can be used to specify a topic to publish log statistics to which gets captured by the
@@ -45,7 +48,7 @@ The Log Statistics agent has 4 required configuration values:
 Install and start the log statistics agent
 
 ```bash
-vctl install volttron-log-statistics --agent-config log_stat_config.json --vip-identity platform.log_statistics --start --force
+vctl install volttron-log-statistics --agent-config log_stat_config.json --vip-identity platform.log_statistics --start
 ```
 
 View the status of the installed agent.
