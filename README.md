@@ -1,9 +1,9 @@
 # volttron-log-statistics
 
-![Passing?](https://github.com/eclipse-volttron/volttron-log-statistics/actions/workflows/run-tests.yml/badge.svg) 
-[![pypi version](https://img.shields.io/pypi/v/volttron-log-statistics.svg)](https://pypi.org/project/volttron-log-statistics/) 
+![Passing?](https://github.com/eclipse-volttron/volttron-log-statistics/actions/workflows/run-tests.yml/badge.svg)
+[![pypi version](https://img.shields.io/pypi/v/volttron-log-statistics.svg)](https://pypi.org/project/volttron-log-statistics/)
 
-The Log Statistics agent periodically reads the "volttron.log" file based on the configured interval, computes the size delta from the previous hour and publishes the difference in bytes with a timestamp.  It also publishes standard deviation of the size delta every 24 hours.  This agent can be useful for detecting unexpected changes to the system which may be an indication of some sort of failure or breach.
+The Log Statistics agent periodically reads ".log" files based on the configured interval, computes the size delta from the previous hour and publishes the difference in bytes with a timestamp.  It also publishes standard deviation of the size delta every 24 hours.  This agent can be useful for detecting unexpected changes to the system which may be an indication of some sort of failure or breach.
 
 ## Requires
 
@@ -23,22 +23,22 @@ mkdir config
 cd config
 ```
 
-After entering the config directory, create a file called `log_stat_config.json`. Use the below configuration section to populate your new file. 
+After entering the config directory, create a file called `log_stat_config.json`. Use the below configuration section to populate your new file.
 
 ### Configuration
 
 The Log Statistics agent has 4 configuration parameters, all of which are required:
 
-- `file_path`:  This should be the path to the "volttron.log" file
-- `analysis_interval_secs`:  The interval in seconds between publishes of the size delta statistic to the message bus
-- `publish_topic`:  Can be used to specify a topic to publish log statistics to which does not get captured by the
-  historian framework (topics not prefixed by any of: "datalogger", "record", "analysis", "devices")
+- `file_path`:  The file path to the log file. If left as `null`, defaults to `'volttron.log'` located within your VOLTTRON_HOME environment variable.
+- `analysis_interval_secs`: The interval in seconds between publishes of the size delta statistic to the message bus. If left as `null`, defaults to 60 seconds.
+- `publish_topic`: Used to specify a topic to publish log statistics to which does not get captured by the
+  historian framework (topics not prefixed by any of: "datalogger", "record", "analysis", "devices"). If left as `null`, defaults to `"platform/log_statistics"`.
 - `historian_topic`:  Can be used to specify a topic to publish log statistics to which gets captured by the
-  historian framework ("datalogger", "record", "analysis", "devices")
+  historian framework ("datalogger", "record", "analysis", "devices"). If left as `null`, defaults to `record/log_statistics`.
 
 ```json
 {
-    "file_path" : "~/volttron/volttron.log",
+    "file_path" : null,
     "analysis_interval_sec" : 60,
     "publish_topic" : "platform/log_statistics",
     "historian_topic" : "record/log_statistics"
