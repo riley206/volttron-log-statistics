@@ -69,6 +69,8 @@ class LogStatisticsAgent(Agent):
     def __init__(self, config: dict, **kwargs):
         super(LogStatisticsAgent, self).__init__(**kwargs)
 
+        self.last_std_dev_time = get_aware_utc_now()
+
         # Getting volttron home env variable or using user/name as backup
         volttron_home = os.getenv('VOLTTRON_HOME', os.path.expanduser("~") + '/volttron_home/')
 
@@ -133,7 +135,9 @@ class LogStatisticsAgent(Agent):
                 }
             }]
 
-            if len(self.size_delta_list) == 24:
+            now = get_aware_utc_now()
+            hours_since_last_std_dev = (now - self.last_std_dev_time).total_seconds() / 3600
+            if hours_since_last_std_dev >= 24:
                 standard_deviation = statistics.stdev(self.size_delta_list)
                 publish_message['log_std_dev'] = standard_deviation
                 historian_message[0]['log_std_dev'] = standard_deviation
@@ -145,6 +149,8 @@ class LogStatisticsAgent(Agent):
                                         topic=self.historian_topic,
                                         headers=headers,
                                         message=historian_message)
+                # Reset time
+                self.last_std_dev_time = now
 
                 self.size_delta_list = []
 
