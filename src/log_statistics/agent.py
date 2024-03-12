@@ -68,6 +68,23 @@ class LogStatisticsAgent(Agent):
 
     def __init__(self, config: dict, **kwargs):
         super(LogStatisticsAgent, self).__init__(**kwargs)
+
+        # Getting volttron home env variable or using user/name as backup
+        volttron_home = os.getenv('VOLTTRON_HOME', os.path.expanduser("~") + '/volttron_home/')
+
+        self.default_config = {
+            "file_path": f"{volttron_home}/volttron.log",
+            "analysis_interval_sec": 60,
+            "publish_topic": "platform/log_statistics",
+            "historian_topic": "analysis/log_statistics"
+        }
+
+        # Update config with defaults for any keys not present in config
+        for key, value in self.default_config.items():
+            if config.get(key) is None:
+                _log.info(f"Using default value for {key}: {value}")
+                config[key] = value
+
         self.analysis_interval_sec = config["analysis_interval_sec"]
         self.file_path = config["file_path"]
         self.publish_topic = config["publish_topic"]
@@ -105,10 +122,16 @@ class LogStatisticsAgent(Agent):
 
             headers = {'Date': datetime.datetime.utcnow().isoformat() + 'Z'}
 
-            publish_message = {'timestamp': datetime.datetime.utcnow().isoformat() + 'Z',
-                               'log_size_delta': size_delta}
-            historian_message = [{"log_size_delta ": size_delta},
-                                 {"log_size_delta ": {'units': 'bytes', 'tz': 'UTC', 'type': 'float'}}]
+            publish_message = {'timestamp': datetime.datetime.utcnow().isoformat() + 'Z', 'log_size_delta': size_delta}
+            historian_message = [{
+                "log_size_delta ": size_delta
+            }, {
+                "log_size_delta ": {
+                    'units': 'bytes',
+                    'tz': 'UTC',
+                    'type': 'float'
+                }
+            }]
 
             if len(self.size_delta_list) == 24:
                 standard_deviation = statistics.stdev(self.size_delta_list)
@@ -116,9 +139,11 @@ class LogStatisticsAgent(Agent):
                 historian_message[0]['log_std_dev'] = standard_deviation
                 historian_message[1]['log_std_dev'] = {'units': 'bytes', 'tz': 'UTC', 'type': 'float'}
 
-                _log.debug('publishing message {} with header {} on historian topic {}'
-                           .format(historian_message, headers, self.historian_topic))
-                self.vip.pubsub.publish(peer="pubsub", topic=self.historian_topic, headers=headers,
+                _log.debug('publishing message {} with header {} on historian topic {}'.format(
+                    historian_message, headers, self.historian_topic))
+                self.vip.pubsub.publish(peer="pubsub",
+                                        topic=self.historian_topic,
+                                        headers=headers,
                                         message=historian_message)
 
                 self.size_delta_list = []
