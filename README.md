@@ -38,10 +38,10 @@ The Log Statistics agent has 4 configuration parameters, all of which are requir
 
 ```json
 {
-    "file_path" : null,
-    "analysis_interval_sec" : 60,
-    "publish_topic" : "platform/log_statistics",
-    "historian_topic" : "record/log_statistics"
+  "analysis_interval_sec": 60,
+  "file_path": null,
+  "historian_topic": "analysis/log_statistics",
+  "publish_topic": "platform/log_statistics"
 }
 ```
 
