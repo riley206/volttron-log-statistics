@@ -3,7 +3,7 @@
 ![Passing?](https://github.com/eclipse-volttron/volttron-log-statistics/actions/workflows/run-tests.yml/badge.svg)
 [![pypi version](https://img.shields.io/pypi/v/volttron-log-statistics.svg)](https://pypi.org/project/volttron-log-statistics/)
 
-The Log Statistics agent periodically reads ".log" files based on the configured interval, computes the size delta from the previous hour and publishes the difference in bytes with a timestamp.  It also publishes standard deviation of the size delta every 24 hours.  This agent can be useful for detecting unexpected changes to the system which may be an indication of some sort of failure or breach.
+The Log Statistics agent periodically reads ".log" files based on the configured interval, computes the size delta from the previous interval and publishes the difference in bytes with a timestamp.  It also publishes the standard deviation and mean of the size delta every 24 hours.  This agent can be useful for detecting unexpected changes to the system which may be an indication of some sort of failure or breach.
 
 ## Requires
 
