@@ -137,11 +137,33 @@ class LogStatisticsAgent(Agent):
 
             now = get_aware_utc_now()
             hours_since_last_std_dev = (now - self.last_std_dev_time).total_seconds() / 3600
+
             if hours_since_last_std_dev >= 24:
-                standard_deviation = statistics.stdev(self.size_delta_list)
-                publish_message['log_std_dev'] = standard_deviation
-                historian_message[0]['log_std_dev'] = standard_deviation
-                historian_message[1]['log_std_dev'] = {'units': 'bytes', 'tz': 'UTC', 'type': 'float'}
+                if self.size_delta_list:    # make sure it has something in it
+                    if len(self.size_delta_list) >= 2:    # make sure it has more than two items
+                        mean = statistics.mean(self.size_delta_list)
+                        standard_deviation = statistics.stdev(self.size_delta_list)
+
+                        publish_message['log_mean'] = mean
+                        print(f"Calculated mean: {mean}")
+                        publish_message['log_std_dev'] = standard_deviation
+
+                        historian_message[0]['log_mean'] = mean
+                        historian_message[0]['log_std_dev'] = standard_deviation
+
+                        historian_message[1]['log_mean'] = {'units': 'bytes', 'tz': 'UTC', 'type': 'float'}
+                        historian_message[1]['log_std_dev'] = {'units': 'bytes', 'tz': 'UTC', 'type': 'float'}
+
+                    else:
+                        _log.info("Not enough data points to calculate standard deviation")
+
+                else:
+                    _log.info("Not enough data points to calculate mean and standard deviation")
+
+                # Reset time
+                self.last_std_dev_time = now
+
+                self.size_delta_list = []
 
                 _log.debug('publishing message {} with header {} on historian topic {}'.format(
                     historian_message, headers, self.historian_topic))
@@ -149,10 +171,6 @@ class LogStatisticsAgent(Agent):
                                         topic=self.historian_topic,
                                         headers=headers,
                                         message=historian_message)
-                # Reset time
-                self.last_std_dev_time = now
-
-                self.size_delta_list = []
 
             _log.debug('publishing message {} on topic {}'.format(publish_message, self.publish_topic))
             self.vip.pubsub.publish(peer="pubsub", topic=self.publish_topic, message=publish_message)
