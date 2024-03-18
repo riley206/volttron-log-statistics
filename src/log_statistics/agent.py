@@ -30,6 +30,7 @@ import sys
 
 from volttron import utils
 from volttron.client.vip.agent import RPC, Agent, Core
+from volttron.utils import ClientContext as cc
 from volttron.utils.time import get_aware_utc_now
 
 utils.setup_logging()
@@ -71,8 +72,7 @@ class LogStatisticsAgent(Agent):
 
         self.last_std_dev_time = get_aware_utc_now()
 
-        # Getting volttron home env variable or using user/name as backup
-        volttron_home = os.getenv('VOLTTRON_HOME', os.path.expanduser("~") + '/volttron_home/')
+        volttron_home = cc.get_volttron_home()
 
         self.default_config = {
             "file_path": f"{volttron_home}/volttron.log",
