@@ -29,26 +29,31 @@ After entering the config directory, create a file called `log_stat_config.json`
 
 The Log Statistics agent has 4 configuration parameters, all of which are required:
 
-- `file_path`:  The file path to the log file. If left as `null`, defaults to `'volttron.log'` located within your VOLTTRON_HOME environment variable.
-- `analysis_interval_secs`: The interval in seconds between publishes of the size delta statistic to the message bus. If left as `null`, defaults to 60 seconds.
+- `file_path`:  The file path to the log file. If no config provided, defaults to `'volttron.log'` located within your VOLTTRON_HOME environment variable.
+- `analysis_interval_secs`: The interval in seconds between publishes of the size delta statistic to the message bus. If no config provided, defaults to 60 seconds.
 - `publish_topic`: Used to specify a topic to publish log statistics to which does not get captured by the
-  historian framework (topics not prefixed by any of: "datalogger", "record", "analysis", "devices"). If left as `null`, defaults to `"platform/log_statistics"`.
+  historian framework (topics not prefixed by any of: "datalogger", "record", "analysis", "devices"). If no config provided, defaults to `"platform/log_statistics"`.
 - `historian_topic`:  Can be used to specify a topic to publish log statistics to which gets captured by the
-  historian framework ("datalogger", "record", "analysis", "devices"). If left as `null`, defaults to `record/log_statistics`.
+  historian framework ("datalogger", "record", "analysis", "devices"). If no config provided, defaults to `record/log_statistics`.
 
+Here is an example configuration file named `log_stat_config.json`.
 ```json
 {
   "analysis_interval_sec": 60,
-  "file_path": null,
+  "file_path": "path/to/.log/",
   "historian_topic": "analysis/log_statistics",
   "publish_topic": "platform/log_statistics"
 }
+```
+Store the configuration in the config store
+```bash
+vctl config store platform.log_statistics config /path/to/config
 ```
 
 Install and start the log statistics agent
 
 ```bash
-vctl install volttron-log-statistics --agent-config log_stat_config.json --vip-identity platform.log_statistics --start
+vctl install volttron-log-statistics --vip-identity platform.log_statistics --start
 ```
 
 View the status of the installed agent.
