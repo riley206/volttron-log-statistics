@@ -35,6 +35,11 @@ The Log Statistics agent has 4 configuration parameters, all of which are requir
   historian framework (topics not prefixed by any of: "datalogger", "record", "analysis", "devices"). If no config provided, defaults to `"platform/log_statistics"`.
 - `historian_topic`:  Can be used to specify a topic to publish log statistics to which gets captured by the
   historian framework ("datalogger", "record", "analysis", "devices"). If no config provided, defaults to `record/log_statistics`.
+- `unit`:  Can be used to specify units. Defaults to `bytes`.
+  - "bytes"
+  - "kb"
+  - "mb"
+  - "gb"
 
 Here is an example configuration file named `log_stat_config.json`.
 ```json
@@ -42,7 +47,8 @@ Here is an example configuration file named `log_stat_config.json`.
   "analysis_interval_sec": 60,
   "file_path": "path/to/.log/",
   "historian_topic": "analysis/log_statistics",
-  "publish_topic": "platform/log_statistics"
+  "publish_topic": "platform/log_statistics",
+  "unit": "bytes"
 }
 ```
 Store the configuration in the config store
