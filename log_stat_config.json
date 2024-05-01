@@ -1,6 +1,7 @@
 {
-  "analysis_interval_sec": 60,
-  "file_path": "/path/to/volttron.log",
+  "analysis_interval_sec": 20,
+  "file_path": "PORTS/volttron-log-statistics/volttron_home_new/volttron.log",
   "historian_topic": "analysis/log_statistics",
-  "publish_topic": "platform/log_statistics"
+  "publish_topic": "platform/log_statistics",
+  "unit": "mb"
 }

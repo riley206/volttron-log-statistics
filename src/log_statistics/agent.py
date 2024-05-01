@@ -65,7 +65,8 @@ class LogStatisticsAgent(Agent):
             "file_path": f"{volttron_home}/volttron.log",
             "analysis_interval_sec": 60,
             "publish_topic": "platform/log_statistics",
-            "historian_topic": "analysis/log_statistics"
+            "historian_topic": "analysis/log_statistics",
+            "unit": "bytes"
         }
 
         if config_path:
@@ -84,6 +85,7 @@ class LogStatisticsAgent(Agent):
         self.file_path = config["file_path"]
         self.publish_topic = config["publish_topic"]
         self.historian_topic = config["historian_topic"]
+        self.unit = config["unit"]
         self.size_delta_list = []
         self.file_start_size = None
         self.prev_file_size = None
@@ -110,13 +112,15 @@ class LogStatisticsAgent(Agent):
 
         if self.prev_file_size is None:
             self.prev_file_size = self.get_file_size()
-            _log.debug("init_file_size = {}".format(self.prev_file_size))
+            _log.debug(f"init_file_size = {self.convert_bytes(self.prev_file_size, self.unit)} {self.unit}")
         else:
             # read file size
             curr_file_size = self.get_file_size()
 
             # calculate size delta
             size_delta = curr_file_size - self.prev_file_size
+            size_delta = self.convert_bytes(size_delta, self.unit)
+
             self.prev_file_size = curr_file_size
 
             self.size_delta_list.append(size_delta)
@@ -128,7 +132,7 @@ class LogStatisticsAgent(Agent):
                 "log_size_delta ": size_delta
             }, {
                 "log_size_delta ": {
-                    'units': 'bytes',
+                    'units': f'{self.unit}',
                     'tz': 'UTC',
                     'type': 'float'
                 }
@@ -150,8 +154,8 @@ class LogStatisticsAgent(Agent):
                         historian_message[0]['log_mean'] = mean
                         historian_message[0]['log_std_dev'] = standard_deviation
 
-                        historian_message[1]['log_mean'] = {'units': 'bytes', 'tz': 'UTC', 'type': 'float'}
-                        historian_message[1]['log_std_dev'] = {'units': 'bytes', 'tz': 'UTC', 'type': 'float'}
+                        historian_message[1]['log_mean'] = {'units': f'{self.unit}', 'tz': 'UTC', 'type': 'float'}
+                        historian_message[1]['log_std_dev'] = {'units': f'{self.unit}', 'tz': 'UTC', 'type': 'float'}
 
                     else:
                         _log.info("Not enough data points to calculate standard deviation")
@@ -164,14 +168,15 @@ class LogStatisticsAgent(Agent):
 
                 self.size_delta_list = []
 
-                _log.debug('publishing message {} with header {} on historian topic {}'.format(
-                    historian_message, headers, self.historian_topic))
+                _log.debug(f'publishing message {historian_message}'
+                           f' with header {headers}'
+                           f' on historian topic {self.historian_topic}')
                 self.vip.pubsub.publish(peer="pubsub",
                                         topic=self.historian_topic,
                                         headers=headers,
                                         message=historian_message)
 
-            _log.debug('publishing message {} on topic {}'.format(publish_message, self.publish_topic))
+            _log.debug(f'publishing message {publish_message} {self.unit} on topic {self.publish_topic}')
             self.vip.pubsub.publish(peer="pubsub", topic=self.publish_topic, message=publish_message)
 
         _log.debug('Scheduling next periodic call')
@@ -185,6 +190,18 @@ class LogStatisticsAgent(Agent):
             return os.path.getsize(self.file_path)
         except OSError as e:
             _log.error(e)
+    def convert_bytes(self, size, unit):
+        """
+        Converts size from bytes to the specified unit
+        """
+        unit = unit.lower()
+        if unit == 'kb':
+            return size / 1024
+        elif unit == 'mb':
+            return size / 1024**2
+        elif unit == 'gb':
+            return size / 1024**3
+        return size
 
 
 def main(argv=sys.argv):
