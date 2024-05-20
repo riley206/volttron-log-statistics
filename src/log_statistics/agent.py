@@ -79,6 +79,7 @@ class LogStatisticsAgent(Agent):
         config.update(contents)
         if action == "NEW" or "UPDATE":
             self.reset_parameters(config)
+            _log.info("Starting " + self.__class__.__name__ + " agent")
 
     def reset_parameters(self, config=None):
         self.analysis_interval_sec = config["analysis_interval_sec"]
@@ -91,11 +92,6 @@ class LogStatisticsAgent(Agent):
         self.prev_file_size = None
         self._scheduled_event = None
 
-        self.publish_analysis()
-
-    @Core.receiver('onstart')
-    def starting(self, sender, **kwargs):
-        _log.info("Starting " + self.__class__.__name__ + " agent")
         self.publish_analysis()
 
     def publish_analysis(self):
