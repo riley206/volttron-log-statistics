@@ -45,7 +45,7 @@ Here is an example configuration file named `log_stat_config.json`.
 ```json
 {
   "analysis_interval_sec": 60,
-  "file_path": "path/to/.log/",
+  "file_path": "path/to/.log",
   "historian_topic": "analysis/log_statistics",
   "publish_topic": "platform/log_statistics",
   "unit": "bytes"
