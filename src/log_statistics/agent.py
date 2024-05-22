@@ -30,8 +30,7 @@ import sys
 
 from volttron import utils
 from volttron.client.vip.agent import Agent, Core
-from volttron.utils import ClientContext as cc
-from volttron.utils.time import get_aware_utc_now
+from volttron.utils import ClientContext as cc, get_aware_utc_now
 
 utils.setup_logging()
 _log = logging.getLogger(__name__)
