@@ -187,7 +187,7 @@ class LogStatisticsAgent(Agent):
             _log.error(e)
     def convert_bytes(self, size, unit):
         """
-        Converts size from bytes to the specified unit
+        Converts size from bytes to the specified unit.
         """
         unit = unit.lower()
         if unit == 'kb':
