@@ -24,6 +24,7 @@
 
 import json
 import os
+from pathlib import Path
 
 import pytest
 from mock import MagicMock
@@ -67,8 +68,9 @@ def test_log_stats(volttron_instance, publish_agent):
     test_config["file_path"] = volttron_instance.log_path
     print(f"File path: {test_config['file_path']}")
 
+    agent_path = Path(__file__).parents[1]
     stats_uuid = volttron_instance.install_agent(
-        agent_dir="volttron-log-statistics",
+        agent_dir=agent_path,
         config_file=test_config,
         start=True,
         vip_identity="health_test")
